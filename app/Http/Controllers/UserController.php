@@ -42,7 +42,7 @@ class UserController extends Controller
             'results' => User::select('name', 'id')
                             ->where('id', '!=', $this->user->id)
                             ->where(function ($q) use ($s) {
-                                $q->where('name', 'LIKE', "%$s%")->orWhere('name', 'LIKE', "%$s%");
+                                $q->where('name', 'LIKE', "%$s%")->orWhere('id', 'LIKE', "%$s%");
                             })
                             ->get()
             ];
