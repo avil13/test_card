@@ -186,7 +186,7 @@ class CardController extends Controller
                     'money'      => $from_balance,
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s"),
-                    'comment'    => 'Переведено ' . $input['money'] . ' пользователю ' .
+                    'comment'    => 'Переведено ' . $input['money'] . 'р. пользователю ' .
                                     $toUser->name . ' [' . $toUser->id . ']'
                     ]);
 
@@ -198,7 +198,7 @@ class CardController extends Controller
                     'money'   => $to_balance,
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s"),
-                    'comment' => 'Переведено ' . $input['money'] . ' от пользователя ' .
+                    'comment' => 'Переведено ' . $input['money'] . 'р. от пользователя ' .
                                     $this->user->name . ' [' . $this->user->id . ']'
                     ]);
             });
@@ -244,36 +244,45 @@ class CardController extends Controller
             ];
         }
 
-        $card = Card::where('user_id', $this->user->id)
-                    ->where('id', $input['id'])
-                    ->first();
+        $id =  $this->user->id;
 
-        $card->balance = $card->balance + $input['money'];
-
-        if($card->save())
+        try
         {
+            \DB::transaction(function () use ($id, $input) {
+                $card = \DB::table('cards')
+                            ->where('user_id', $id)
+                            ->where('id', $input['id'])
+                            ->first();
+
+                $balance = $card->balance + $input['money'];
+
+                \DB::table('cards')
+                    ->where('user_id', $id)
+                    ->where('id', $input['id'])
+                    ->update(['balance' => $balance]);
+
+                \DB::table('transactions')->insert([
+                            'user_id' => $id,
+                            'from_id' => $id,
+                            'card_id' => $input['id'],
+                            'money'   => $balance,
+                            'created_at' => date("Y-m-d H:i:s"),
+                            'updated_at' => date("Y-m-d H:i:s"),
+                            'comment' => 'Баланс пополнен на ' . $input['money'] . 'р.'
+                            ]);
+            });
             return [
                 'success' => true,
                 'content' => 'Баланс пополнен'
             ];
         }
-
-        return [
-            'success' => false,
-            'content' => 'Не удалось пополнить баланс'
-        ];
+        catch (Exception $e)
+        {
+            return [
+                'success' => false,
+                'content' => 'Не удалось пополнить баланс'
+            ];
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -27,7 +27,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return $this->user;
+        return User::with('group')->where('id', $this->user->id)->first();
     }
 
     /**

@@ -9,6 +9,7 @@ APP.controller 'MainCtrl', ['$scope', 'swal', 'API', '$filter'
     # данные пользователя
     $scope.user =
         name: '...'
+        group:'-'
         sum: 0
         main_card: 0
         cards: []
@@ -19,6 +20,7 @@ APP.controller 'MainCtrl', ['$scope', 'swal', 'API', '$filter'
     $scope.getUser = ->
         API.get '/api/user', (data)->
             $scope.user.name = if data && data.name then data.name else '...'
+            $scope.user.group = if data && data.group && data.group.title then data.group.title else '-'
             if data.main_card then $scope.user.main_card = data.main_card
     $scope.getUser()
 

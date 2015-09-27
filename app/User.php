@@ -39,9 +39,8 @@ class User extends Model implements AuthenticatableContract,
      */
     protected $hidden = ['password', 'remember_token'];
 
-
-    // public function setPasswordAttribute($value)
-    // {
-    //     $this->attributes['password'] = \Hash::make($value);
-    // }
+    public function group()
+    {
+        return $this->belongsTo('App\Group', 'group_id');
+    }
 }

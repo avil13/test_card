@@ -42,11 +42,11 @@ class DatabaseSeeder extends Seeder
 
         $data = [
                     [
-                        'title' => 'Администраторы',
+                        'title' => 'Администратор',
                         'system' => true,
                     ],
                     [
-                        'title' => 'Пользователи',
+                        'title' => 'Пользователь',
                         'system' => false,
                     ],
                 ];
