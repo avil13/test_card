@@ -1,0 +1,29 @@
+<div ng-switch on="typeView" ng-model="currDate">
+
+    <button class="btn btn-default" ng-switch-default ng-click="changeView()"><i class="glyphicon glyphicon-calendar"></i> &nbsp; {{currDate|date:'longDate'}}</button>
+
+    <!-- calendare  -->
+
+    <table class="data-piker table-condensed table-bordered" ng-switch-when="true">
+        <tr>
+            <th colspan="7" class="text-center">
+                <span class="btn-group">
+                    <a ng-click="prev()" class="btn btn-default"><i class="glyphicon glyphicon-arrow-left"></i></a>
+                    <a class="btn btn-default active">{{currDate|date:"longDate"}}</a>
+                    <a ng-click="next()" class="btn btn-default"><i class="glyphicon glyphicon-arrow-right"></i></a>
+                </span>
+            </th>
+        </tr>
+        <!--  -->
+        <tr>
+            <th ng-repeat="day in weekdays">{{ day |date:"EEE" }}</th>
+        </tr>
+        <!--  -->
+        <tr ng-repeat="week in weeks">
+            <td ng-repeat="day in week" ng-click="setDate(day)" ng-class="chekDate(day)">
+                <span>{{day.d | date:'dd'}}</span>
+            </td>
+        </tr>
+    </table>
+
+</div>
